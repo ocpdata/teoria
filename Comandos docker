@@ -1,0 +1,19 @@
+Gestión de Contenedores
+docker run [IMAGEN] : Descarga y ejecuta un nuevo contenedor a partir de una imagen. 
+docker ps : Muestra una lista de los contenedores que se están ejecutando. 
+docker ps -a : Lista todos los contenedores, incluidos los que están detenidos. 
+docker start [NOMBRE_CONTENEDOR] : Inicia un contenedor que había sido detenido. 
+docker stop [NOMBRE_CONTENEDOR] : Detiene un contenedor en ejecución. 
+docker restart [NOMBRE_CONTENEDOR] : Reinicia un contenedor. 
+docker container rm [NOMBRE_CONTENEDOR] : Elimina un contenedor detenido. 
+docker container prune : Elimina todos los contenedores detenidos del sistema. 
+docker exec -it [NOMBRE_CONTENEDOR] [COMANDO] : Ejecuta un comando dentro de un contenedor en ejecución. 
+docker logs [NOMBRE_CONTENEDOR] : Muestra los registros de un contenedor. 
+
+Gestión de Imágenes
+docker build -t [NOMBRE_IMAGEN] . : Construye una nueva imagen a partir de un Dockerfile en el directorio actual. 
+docker images : Lista todas las imágenes disponibles en el sistema. 
+docker rmi [NOMBRE_IMAGEN] : Elimina una o más imágenes. 
+docker image prune : Elimina imágenes que no están siendo utilizadas por ningún contenedor. 
+docker pull [IMAGEN] : Descarga una imagen de un registro. 
+docker push [IMAGEN] : Sube una imagen a un registro. 
