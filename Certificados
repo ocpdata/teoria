@@ -1,0 +1,15 @@
+Para crear un certificado con Let’s Encrypt y usarlo en un balanceador de carga, se utilizan herramientas como Certbot para generar el certificado y luego se exportan los archivos necesarios (privkey y fullchain) para instalarlos en el balanceador. A continuación se describe el proceso paso a paso.
+
+sudo certbot certonly --manual --preferred-challenges dns -d tu-dominio.ejemplo.com
+
+Esto generará los archivos en:
+
+/etc/letsencrypt/live/tu-dominio.ejemplo.com/fullchain.pem (certificado + CA)
+
+/etc/letsencrypt/live/tu-dominio.ejemplo.com/privkey.pem (clave privada).
+
+Los archivos pueden ser copiados al directorio que uno desee.
+Para el archivo privkey.pem hay que copiarlo y luego cambiar los permisos
+
+sudo chmod 644 privkey.pem
+
