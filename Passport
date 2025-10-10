@@ -1,8 +1,8 @@
 Passport se configura como un middleware para las rutas a proteger
 
 Se define una estrategia con Passport.use. La estrategia define los pasos a seguir para autenticarse con el proveedor definido.
-Después de haber realizado la estrategia, se recibe: req, accessToken, refreshToken, profile y se ejecuta una función callback para procesar lo recibido y volver a la ruta con la funcion done.
-La función callback puede validar si el usuario existe en la base local (opcional) o procesar el error si hubo
+Después de haber realizado la estrategia, se ejecuta una funcion callback: verify que recibe: req, accessToken, refreshToken, profile y se ejecuta una función done (cb - callback tambien) para procesar lo recibido y volver a la ruta.
+La función callback verify puede validar si el usuario existe en la base local (opcional) o procesar el error si hubo
 
 Passport authenticate ejecuta la estrategia. Es el middleware que protege a la ruta.
 
