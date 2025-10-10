@@ -1,0 +1,4 @@
+Passport se configura como un middleware para las rutas a proteger
+Se define una estrategia con Passport.use. La estrategia define los pasos a seguir para autenticarse con el proveedor definido
+Passport authenticate ejecuta la estrategia
+La estrategia sigue todo el flujo OAuth2. Devuelve a la siguiente función si el usuario ha sido validado o hubo un error en el proceso
