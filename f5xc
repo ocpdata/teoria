@@ -1,0 +1,14 @@
+1.- Client Side Defense
+https://community.f5.com/kb/technicalarticles/javascript-supply-chains-magecart-and-f5-xc-client-side-defense-demo/296612
+
+Para probar Client side Defense, se usa la pagina https://test01.accessq.com.mx:5010/magecart/pagoseguro.html
+Esta pagina tiene un keylogger. Cuando se activa el CSD en F5 XC, a la pagina se le inserta un script que cuando se ejecuta en el navegador, revisa las conexiones que se realizan a otros sitios y los bloquea.
+El CSD se activa en el balanceador y se elige Insert JavaScript in All Pages
+
+2.- Para hacer que solo se carguen scripts locales y no externos, se configura en la ruta la respuesta del header, lo siguiente: Content-Security-Policy script-src 'self'
+Para probar esta caracteristica, se usa la pagina https://test01.accessq.com.mx:5010/magecart/pagoseguro.html, y no cargarà el logger porque es externo.
+
+3.- Inserción de scripts
+https://community.f5.com/kb/technicalarticles/thinking-outside-the-box-rewriting-web-pages-with-f5-distributed-cloud-xc/343934
+Para probar se usa la pagina https://test01.accessq.com.mx:5010/magecart/pagoseguro.html y la ruta js-page-rewrite dentro de Shared Configuration
+Cuando se configura la inserción del script, se usa este url /page-rewrite.js?search=Pedido&replacewith=Orden
