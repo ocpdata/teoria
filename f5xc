@@ -12,3 +12,8 @@ Para probar esta caracteristica, se usa la pagina https://test01.accessq.com.mx:
 https://community.f5.com/kb/technicalarticles/thinking-outside-the-box-rewriting-web-pages-with-f5-distributed-cloud-xc/343934
 Para probar se usa la pagina https://test01.accessq.com.mx:5010/magecart/pagoseguro.html y la ruta js-page-rewrite dentro de Shared Configuration
 Cuando se configura la inserción del script, se usa este url /page-rewrite.js?search=Pedido&replacewith=Orden
+
+
+Links futuros:
+Automation of F5 Distributed Cloud Platform Client-Side Defense feature - Part I
+https://community.f5.com/kb/technicalarticles/automation-of-f5-distributed-cloud-platform-client-side-defense-feature---part-i/305052
