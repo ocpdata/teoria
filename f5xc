@@ -26,3 +26,7 @@ https://community.f5.com/kb/technicalarticles/enhancing-big-ip-with-f5-distribut
 
 Laboratorio 3: Usuarios maliciosos
 https://clouddocs.f5.com/training/community/f5xc/html/class2/lab3.html
+
+F5 XC – Persistence and Resiliency pt. I (persistence)
+https://community.f5.com/kb/technicalarticles/f5-xc-%E2%80%93-persistence-and-resiliency-pt-i-persistence/341878
+Se creo la ruta https://test01.accessq.com.mx:5010/system-info pàra probar la persistencia. No requiere autenticacion
