@@ -44,3 +44,6 @@ brew update && brew install mailhog
 
 OWASP Vulnerable Web Applications Directory
 https://owasp.org/www-project-vulnerable-web-applications-directory/
+
+Mitigating OWASP Web Application Security Top 10 risks using F5 NGINX App Protect
+https://community.f5.com/kb/technicalarticles/mitigating-owasp-web-application-security-top-10-risks-using-f5-nginx-app-protec/340322
