@@ -1,0 +1,4 @@
+Para ejecutar un script de un proyecto en node usar:
+sudo pm2 start npm --name "nombre-del-proyecto" -- run start:dev
+"nombre-del-proyecto" es el nombre con el que se identificara este proceso
+start:dev es el script que está en packake.json
