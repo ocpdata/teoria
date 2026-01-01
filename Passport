@@ -6,4 +6,123 @@ La función callback verify puede validar si el usuario existe en la base local 
 
 Passport authenticate ejecuta la estrategia. Es el middleware que protege a la ruta.
 
+Passport es un middleware de autenticación para node.js
+Está diseñado para cumplir un único propósito: autenticar solicitudes. Passport encapsula perfectamente esta funcionalidad, a la vez que delega a la aplicación detalles no relacionados, como el acceso a los datos.
+La autenticación puede ser realizda de diferentes maneras:
+- Proveyendo un usuario y password
+- Haciendo Single Sign-On (SSO) con las redes sociales
+- Usando Web Authentication (WebAuthn) para permitir el uso de huellas dactilares o reconocimiento facial
+Para soportar aplicaciones web y moviles, la autenticación se expone como una API.
+El acceso a las APIS es protegido por credenciales basdaas en tokens usando OAuth
 
+Passport proporciona un marco flexible que permite a una aplicación utilizar cualquiera de estos mecanismos de autenticación. Passport reduce la complejidad de la autenticación de una solicitud a una simple declaración:
+app.post('/login/password', passport.authenticate('local'));
+
+Hay tres conceptos que hay que tener en cuenta:
+1. Middleware
+2. Estrategias
+3. Sesiones
+
+1. Middleware
+El siguiente código es un ejemplo de una ruta que autentica a un usuario con un nombre de usuario y una contraseña:
+app.post('/login/password',
+  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    res.redirect('/~' + req.user.username);
+  });
+En esta ruta, passport.authenticate() es el middleware que autenticará la solicitud. De forma predeterminada, cuando la autenticación es exitosa, la propiedad req.user se establece con el usuario autenticado, se establece una sesión y se llama a la siguiente función del stack. Esta siguiente función suele ser lógica específica de la aplicación que procesará la solicitud en nombre del usuario.
+Si falla la autenticación, se enviará una respuesta HTTP 401 "No autorizado" y finalizará el ciclo de solicitud-respuesta. No se llamará a ninguna función adicional en la pila.
+En las aplicaciones web tradicionales, que interactúan con el usuario mediante páginas HTML, formularios y redirecciones, se suele usar la opción "failureRedirect". En lugar de responder con un error "401 No autorizado", el navegador será redirigido a la ubicación indicada con un error "302 Encontrado". Esta ubicación suele ser la página de inicio de sesión, que permite al usuario intentar iniciar sesión de nuevo tras un error de autenticación. Esto suele combinarse con la opción "failureMessage", que añade un mensaje informativo a la sesión sobre el motivo del error de autenticación, que puede mostrarse al usuario.
+
+2. Estrategias
+Las estrategias se encargan de autenticar las solicitudes, lo cual se logra mediante la implementación de un mecanismo de autenticación. Los mecanismos de autenticación definen cómo codificar una credencial, como una contraseña o una aserción de un proveedor de identidad (IdP), en una solicitud. También especifican el procedimiento necesario para verificar dicha credencial. Si la credencial se verifica correctamente, la solicitud se autentica.
+Existe una amplia variedad de mecanismos de autenticación y, por consiguiente, de estrategias. Las estrategias se distribuyen en paquetes separados que deben instalarse, configurarse y registrarse.
+
+- Instalación
+Por ejemplo, el siguiente comando instalará passport-local, un paquete que proporciona una estrategia para autenticarse con un nombre de usuario y una contraseña:
+$ npm install passport-local
+
+- Configuración
+Una vez instalado el paquete, es necesario configurar la estrategia. La configuración varía según el mecanismo de autenticación, por lo que se recomienda consultar la documentación específica de cada estrategia. Dicho esto, existen patrones comunes que se encuentran en muchas estrategias.
+El siguiente código es un ejemplo que configura LocalStrategy:
+var LocalStrategy = require('passport-local');
+var strategy = new LocalStrategy(function verify(username, password, cb) {
+  db.get('SELECT * FROM users WHERE username = ?', [ username ], function(err, user) {
+    if (err) { return cb(err); }
+    if (!user) { return cb(null, false, { message: 'Incorrect username or password.' }); }
+    
+    crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
+      if (err) { return cb(err); }
+      if (!crypto.timingSafeEqual(user.hashed_password, hashedPassword)) {
+        return cb(null, false, { message: 'Incorrect username or password.' });
+      }
+      return cb(null, user);
+    });
+  });
+});
+Función Verify:
+El constructor LocalStrategy toma una función como argumento. Esta función se conoce como función de verificación y es un patrón común en muchas estrategias. Al autenticar una solicitud, una estrategia analiza la credencial contenida en ella. A continuación, se llama a una función de verificación, que se encarga de determinar el usuario al que pertenece dicha credencial. Esto permite delegar el acceso a los datos a la aplicación.
+En este ejemplo, la función de verificación ejecuta una consulta SQL para obtener un registro de usuario de la base de datos y, tras verificar la contraseña, devuelve el registro a la estrategia, autenticando así al usuario y estableciendo una sesión de inicio de sesión.
+Dado que la propia aplicación proporciona la función de verificación, el acceso al almacenamiento persistente no está restringido. La aplicación puede usar cualquier sistema de almacenamiento de datos, incluyendo bases de datos relacionales, bases de datos gráficas o almacenes de documentos, y estructurar los datos dentro de esa base de datos según cualquier esquema.
+Una función de verificación es específica de cada estrategia, y los argumentos exactos que recibe y los parámetros que proporciona dependerán del mecanismo de autenticación subyacente. Para los mecanismos de autenticación que implican secretos compartidos, como una contraseña, una función de verificación se encarga de verificar la credencial y asignar un usuario. Para los mecanismos que proporcionan autenticación criptográfica, una función de verificación suele asignar un usuario y una clave, la cual la estrategia utilizará para verificar criptográficamente la credencial.
+Una función de verificación da como resultado una de tres condiciones: éxito, fracaso o error.
+Si la función de verificación encuentra un usuario al que pertenece la credencial, y esa credencial es válida, llama a la devolución de llamada con el usuario que se autentica:
+return cb(null, user);
+Si la credencial no pertenece a un usuario conocido o no es válida, la función de verificación llama a la devolución de llamada con falso para indicar una falla de autenticación:
+return cb(null, false);
+Si ocurre un error, como que la base de datos no esté disponible, se llama a la devolución de llamada con un error, en el estilo idiomático de Node.js.
+return cb(err);
+
+-Registro
+Con la estrategia configurada, se registra llamando .use():
+passport.use(strategy);
+Todas las estrategias tienen un nombre que, por convención, corresponde al nombre del paquete según el patrón passport-{name}. Por ejemplo, la LocalStrategy configurada anteriormente se llama local, ya que se distribuye en el paquete passport-local.
+Una vez registrada, la estrategia puede emplearse para autenticar una solicitud pasando su nombre como primer argumento al middleware passport.authenticate():
+app.post('/login/password',
+  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    res.redirect('/~' + req.user.username);
+  });
+
+3. Sesiones
+Una aplicación web necesita la capacidad de identificar a los usuarios mientras navegan entre páginas. Esta serie de solicitudes y respuestas, cada una asociada al mismo usuario, se conoce como sesión.
+HTTP es un protocolo sin estado, lo que significa que cada solicitud a una aplicación puede interpretarse de forma aislada, sin contexto de solicitudes anteriores. Esto supone un reto para las aplicaciones web con usuarios conectados, ya que es necesario recordar al usuario autenticado en las solicitudes posteriores mientras navegan por la aplicación.
+Para resolver este desafío, las aplicaciones web utilizan sesiones, que permiten mantener el estado entre el servidor de aplicaciones y el navegador del usuario. Una sesión se establece mediante la instalación de una cookie HTTP en el navegador, que este transmite al servidor en cada solicitud. El servidor utiliza el valor de la cookie para recuperar la información que necesita en múltiples solicitudes. En efecto, esto crea un protocolo con estado sobre HTTP.
+Si bien las sesiones se utilizan para mantener el estado de autenticación, las aplicaciones también pueden usarlas para mantener otros estados no relacionados con la autenticación. Passport está cuidadosamente diseñado para aislar el estado de autenticación, conocido como sesión de inicio de sesión, de otros estados que puedan almacenarse en la sesión.
+Las aplicaciones deben inicializar la compatibilidad con sesiones para poder usar las sesiones de inicio de sesión. En una aplicación Express, la compatibilidad con sesiones se añade mediante el middleware express-session.
+var session = require('express-session');
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: true }
+}));
+Para mantener una sesión iniciada, Passport serializa y deserializa la información del usuario que entra y sale de la sesión. La información almacenada la determina la aplicación, que proporciona las funciones serializeUser y deserializeUser.
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, {
+      id: user.id,
+      username: user.username,
+      picture: user.picture
+    });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
+Una sesión se establece cuando un usuario se autentica correctamente con una credencial. La siguiente ruta autenticará al usuario con nombre de usuario y contraseña. Si la verificación es correcta, Passport llamará a la función serializeUser, que en el ejemplo anterior almacena el ID, el nombre de usuario y la foto del usuario. No se almacena ninguna otra propiedad del usuario, como la dirección o la fecha de nacimiento.
+app.post('/login/password',
+  passport.authenticate('local', { failureRedirect: '/login', failureMessage: true }),
+  function(req, res) {
+    res.redirect('/~' + req.user.username);
+  });
+A medida que el usuario navega de una página a otra, la sesión se puede autenticar mediante la estrategia de sesión integrada. Dado que una sesión autenticada suele ser necesaria para la mayoría de las rutas de una aplicación, es común utilizarla como middleware a nivel de aplicación, después del middleware de sesión.
+app.use(session(/* ... */);
+app.use(passport.authenticate('session'));
+ó:
+app.use(session(/* ... */);
+app.use(passport.session());
+Cuando se autentica la sesión, Passport llamará a la función deserializeUser, que, en el ejemplo anterior, genera el ID de usuario, el nombre de usuario y la imagen previamente almacenados. La propiedad req.user se establece entonces con la información generada.
