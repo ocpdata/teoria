@@ -1,0 +1,33 @@
+En el directorio de un proyecto hay que inicializar git. Se hace ingresando el comando:
+git init
+desde la terminal en la raiz del directorio del proyecto.
+Se crea automaticamnete un directorio .git en la raiz del directorio del proyecto
+
+En Github hay que crear un repositorio
+
+Hay que loguearse a Github. Se crea una llave publica y privada ingresando el comando
+ssh-keygen -t ed25519 -C "ocarrillo@accessq.com.mx" -f ~/.ssh/peoplenode
+Se crea una llave privada y una publica tipo ed25519 y se guardan en los archivos peoplenode y peoplendode.pub respectivamente en el directorio .ssh dentro del directorio del usuario
+El contenido de la llave publica se guarda en Github: Github > Settings > SSH and GPG keys > New SSH key
+Se prueba la conexion desde el terminal:
+ssh -T git@github.com
+Saldrá un mensaje de bienvenida
+
+Hay que asignar el repositorio a una referencia local como origin, puede ser otro nombre.
+git remote add origin https://github.com/tu-usuario/tu-repo.git
+
+Tambien se indica la rama con la que se está trabajando localmente:
+git branch main
+Siendo main dicha rama
+
+Para subir todo el proyecto al repositorio en Github, hay que poner los documentos del proyecto en estado Stage, luego en Commit y finalmente hacer el push.
+Se indica que documentos o directorios no deben subirse ingresnadolos en el archivo .gitignore dentro del directorio raiz del proyecto.
+Dentro del directorio raiz, desde la terminal se ingresa:
+git add . 
+para colocar todos los archivos modificados en el estado de Stage
+Luego se ponen en commit con el comando:
+git commit -m "mensaje"
+Y luego se ingresa:
+git push origin main
+o solo:
+git push
