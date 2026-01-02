@@ -1,0 +1,43 @@
+Comandos:
+terraform validate
+Valida la sintaxis en los archivos de configuracion
+
+terraform fmt
+Formatea los archivos de configuracion
+
+terraform show
+Muestra todos los recursos deployados. es una consulta a terraform.tfstate
+
+terraform providers
+Lista los providers con los que se esta trabajando y si tienen algun constraint
+
+terraform output
+Lista los outputs
+
+terraform plan
+Refresca el terraform.tfstate y muetsra los recuros a deployar
+
+terraform refresh
+Refresca el terraform.tfstate
+
+terraform apply
+Deploya los archivos de terraform
+
+terraform graph
+Arma las dependedncias de los recursos
+
+terraform graph | dot -Tsvg > graph.svg
+Arma las dependencias y los grafica en un archivo svg
+
+terraform state list
+Lista los recursos desplegados
+
+terraform state show <nombre del recurso>
+Muestra la informacion completa del recurso indicado
+
+terraform state mv <fuente> <destino>
+Reemplaza el contenido de fuente con el de destino en el tfstate. Evita la destruccion de los recursos y su nueva generacion
+
+terraform rm <recurso>
+Bofrra el recurson el tfstate
+
