@@ -16,7 +16,8 @@ El comando para validar las vigencias es: sudo certbot certificates
 Los procesos que deben estar ejecutandose con PM2 son:
 aut-test01aq, api-gw, filemanager y pruebas
 
-
+Para probar con K6, hay ejecutar desde el directorio donde este el script d k6 lo siguiente:
+k6 run <nombre del script>
 
 1.- Client Side Defense
 https://community.f5.com/kb/technicalarticles/javascript-supply-chains-magecart-and-f5-xc-client-side-defense-demo/296612
