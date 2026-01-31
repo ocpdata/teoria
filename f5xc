@@ -1,3 +1,23 @@
+Importante!!!!
+
+El url para pruebas de people es https://test01.accessq.com.mx:5010
+El pool apunta al servidor peoplenode.digitalvs.com:5010 que está alojado en AWS
+La aplicacion se ejecuta en node y el proyecto es backendAuth; tambien usa a los proyectos backendAPIs y filemanager.
+
+Para las pruebas de Client Side Defense, el url es https://test01.accessq.com.mx:5010/magecart/pagoseguro.html
+Cuando se activa client defense, hay que hacer que solo se ejecute para el url /magecart/pagoseguro.html. Si se deja para todas las paginas, no funcionara people.
+magecart está en el directorio public del proyecto backendAuth.
+magecart tambien nhace uso de pruebas.digitalvs.com que está en el proyecto pruebas.
+Para probar sin Client Side Defense debe desactivarse esta opcion y probar con el mismo url https://test01.accessq.com.mx:5010/magecart/pagoseguro.html
+
+Siempre deben validarse la vigencia de los certificados.
+El comando para validar las vigencias es: sudo certbot certificates
+
+Los procesos que deben estar ejecutandose con PM2 son:
+aut-test01aq, api-gw, filemanager y pruebas
+
+
+
 1.- Client Side Defense
 https://community.f5.com/kb/technicalarticles/javascript-supply-chains-magecart-and-f5-xc-client-side-defense-demo/296612
 
