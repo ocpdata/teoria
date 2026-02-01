@@ -19,6 +19,8 @@ aut-test01aq, api-gw, filemanager y pruebas
 Para probar con K6, hay ejecutar desde el directorio donde este el script d k6 lo siguiente:
 k6 run <nombre del script>
 
+Para probar apis, se puede usar http://test02.digitalvs.com:8888. Tambien se puede usar http://peoplenode2.digitalvs.com:8888 sin pasra for F5 XC
+
 1.- Client Side Defense
 https://community.f5.com/kb/technicalarticles/javascript-supply-chains-magecart-and-f5-xc-client-side-defense-demo/296612
 
