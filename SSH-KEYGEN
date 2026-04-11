@@ -1,0 +1,73 @@
+ssh-keygen genera pares de claves SSH (pública/privada) para autenticación segura sin contraseñas. Es la herramienta estándar en Linux/macOS/Windows (Git Bash) para SSH a servidores como OCI OKE, AWS EC2 o clústeres Kubernetes.
+
+Sintaxis básica
+ssh-keygen [opciones]
+
+Salida por defecto: ~/.ssh/id_rsa (privada) + id_rsa.pub (pública).
+
+Parámetros principales
+
+| Opción        | Descripción                                  | Ejemplo            |
+| ------------- | -------------------------------------------- | ------------------ |
+| -t tipo       | Algoritmo: rsa, ed25519 (recomendado), ecdsa | -t rsa             |
+| -b bits       | Tamaño clave: 2048/4096 (RSA), 256 (ed25519) | -b 2048            |
+| -f archivo    | Nombre/ruta personalizada                    | -f ~/.ssh/oke_key  |
+| -C comentario | Identificador (email)                        | -C "omar@cloud.mx" |
+| -N passphrase | Contraseña directa (vacía: -N "")            | -N "mi_pass"       |
+| -m formato    | PEM/PKCS8 para compatibilidad                | -m PEM             |
+
+
+
+Ejemplo 1: RSA 2048 básico (tu caso OKE)
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/oke_rsa -C "omar@cloud.mx"
+
+Salida esperada:
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): [ENTER]
+Enter same passphrase again: [ENTER]
+Your identification has been saved in /home/omar/.ssh/oke_rsa
+Your public key has been saved in /home/omar/.ssh/oke_rsa.pub
+
+Ejemplo 2: Ed25519 moderna (más segura/rápida)
+ssh-keygen -t ed25519 -f ~/.ssh/oke_ed25519 -C "omar@cloud.mx"
+
+Ejemplo 3: Sin passphrase (automatización Terraform)
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/oke_auto -N "" -C "terraform-oke"
+
+Verificación de claves
+# Fingerprint y tamaño
+ssh-keygen -l -f ~/.ssh/oke_rsa
+# → 2048 SHA256:... omar@cloud.mx (RSA)
+
+# Listar todas las claves
+ssh-keygen -l -E md5 ~/.ssh/*
+# → id_rsa: 2048 MD5:... 
+
+Configuración SSH para múltiples claves
+~/.ssh/config:
+
+Host oke-cluster
+    HostName 123.45.67.89
+    User opc
+    IdentityFile ~/.ssh/oke_rsa
+    IdentitiesOnly yes
+
+Host eks-cluster  
+    HostName 98.76.54.32
+    User ec2-user
+    IdentityFile ~/.ssh/eks_rsa
+Uso: ssh oke-cluster (automático).
+
+Permisos correctos (críticos)
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/oke_rsa
+chmod 644 ~/.ssh/oke_rsa.pub
+
+Casos de uso Kubernetes (OKE/EKS)
+Copia pública: cat ~/.ssh/oke_rsa.pub → OCI Console → Compute → Key
+
+Conexión nodos: ssh -i ~/.ssh/oke_rsa opc@node-ip
+
+Terraform: variable "private_key_path" { default = "~/.ssh/oke_rsa" }
+
+La clave privada nunca sale de tu máquina. Solo subes la .pub al servidor.
