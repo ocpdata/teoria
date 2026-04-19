@@ -13,3 +13,13 @@ Para el archivo privkey.pem hay que copiarlo y luego cambiar los permisos
 
 sudo chmod 644 privkey.pem
 
+En el directorio /etc/letsencrypt/live/tu-dominio.ejemplo.com/ se crean los siguientes archivos:
+drwxr-xr-x@ 7 root  wheel  224 Apr 18 18:40 .
+drwx------@ 4 root  wheel  128 Apr 18 18:40 ..
+-rw-r--r--@ 1 root  wheel  692 Apr 18 18:40 README
+lrwxr-xr-x@ 1 root  wheel   45 Apr 18 18:40 cert.pem
+lrwxr-xr-x@ 1 root  wheel   46 Apr 18 18:40 chain.pem
+lrwxr-xr-x@ 1 root  wheel   50 Apr 18 18:40 fullchain.pem
+lrwxr-xr-x@ 1 root  wheel   48 Apr 18 18:40 privkey.pem
+
+Para usar el certificado con F5 DCS hay que copiar el cert.pem y privatekey.pem
